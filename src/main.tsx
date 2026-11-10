@@ -21,6 +21,7 @@ import {
   validate,
   status,
   isAppointmentToday,
+  isAppointmentThisWeek,
   type Job,
   type Inspection,
   type Photo,
@@ -38,7 +39,7 @@ function App() {
   const [draft, setDraft] = useState<Inspection>();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
-  const [todayOnly, setTodayOnly] = useState(false);
+  const [dateFilter, setDateFilter] = useState<'all' | 'today' | 'week'>('all');
   const [saving, setSaving] = useState('Saved');
   const [error, setError] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
@@ -168,7 +169,9 @@ function App() {
     (j) =>
       (j.address + ' ' + j.city).toLowerCase().includes(query.toLowerCase()) &&
       (filter === 'All' || status(inspections.find((i) => i.jobId === j.id)) === filter) &&
-      (!todayOnly || isAppointmentToday(j.date)),
+      (dateFilter === 'all' ||
+        (dateFilter === 'today' && isAppointmentToday(j.date)) ||
+        (dateFilter === 'week' && isAppointmentThisWeek(j.date))),
   );
 
   const counts = ['Scheduled', 'In progress', 'Completed'].map((s) =>
@@ -247,15 +250,25 @@ function App() {
                 <h2>Your inspections</h2>
                 <p>All your upcoming and completed jobs in one place.</p>
               </div>
-              <div className="list-actions">
+              <div className="list-actions" role="group" aria-label="Filter inspections by date">
                 <span className="count">{filtered.length} jobs</span>
                 <button
-                  className={'today-toggle' + (todayOnly ? ' active' : '')}
+                  className={'date-toggle' + (dateFilter === 'today' ? ' active' : '')}
                   type="button"
-                  aria-pressed={todayOnly}
-                  onClick={() => setTodayOnly((current) => !current)}
+                  aria-pressed={dateFilter === 'today'}
+                  onClick={() =>
+                    setDateFilter((current) => (current === 'today' ? 'all' : 'today'))
+                  }
                 >
                   <CalendarDays size={15} /> Today
+                </button>
+                <button
+                  className={'date-toggle' + (dateFilter === 'week' ? ' active' : '')}
+                  type="button"
+                  aria-pressed={dateFilter === 'week'}
+                  onClick={() => setDateFilter((current) => (current === 'week' ? 'all' : 'week'))}
+                >
+                  <CalendarDays size={15} /> This week
                 </button>
               </div>
             </div>
