@@ -1,1 +1,29 @@
-{"name":"loophouse","version":"1.0.0","private":true,"type":"module","scripts":{"dev":"vite --host 127.0.0.1","build":"tsc -b && vite build","test":"vitest run"},"dependencies":{"@vitejs/plugin-react":"latest","idb":"latest","jspdf":"latest","lucide-react":"latest","react":"latest","react-dom":"latest"},"devDependencies":{"@types/react":"latest","@types/react-dom":"latest","typescript":"latest","vite":"latest","vitest":"latest"}}
+{
+  "name": "loophouse",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "idb": "latest",
+    "jspdf": "latest",
+    "lucide-react": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "prettier": "3.9.10",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}

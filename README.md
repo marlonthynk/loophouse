@@ -16,9 +16,12 @@ Open the address printed by Vite. Use the fictional jobs to start an inspection,
 ## Checks
 
 ```sh
+npm run format:check
 npm test
 npm run build
 ```
+
+Run `npm run format` to format the source and configuration files with Prettier.
 
 Data is local to the browser, can be cleared or evicted, and does not sync across devices. Use fictional data. The safety section is a demo, not a regulatory assessment.
 
