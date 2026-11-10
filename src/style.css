@@ -222,7 +222,7 @@ p {
   align-items: center;
   gap: 9px;
 }
-.today-toggle {
+.date-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -234,10 +234,10 @@ p {
   font-size: 12px;
   font-weight: 700;
 }
-.today-toggle:hover {
+.date-toggle:hover {
   background: #f8f4fe;
 }
-.today-toggle.active {
+.date-toggle.active {
   border-color: #7547cc;
   background: #7547cc;
   color: white;

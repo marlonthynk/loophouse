@@ -145,11 +145,29 @@ export function status(i?: Inspection) {
 }
 
 export function isAppointmentToday(date: string, today = new Date()): boolean {
-  const localDate = [
-    today.getFullYear(),
-    String(today.getMonth() + 1).padStart(2, '0'),
-    String(today.getDate()).padStart(2, '0'),
-  ].join('-');
+  return date.slice(0, 10) === localCalendarDate(today);
+}
 
-  return date.slice(0, 10) === localDate;
+export function isAppointmentThisWeek(date: string, today = new Date()): boolean {
+  const dayOfWeek = today.getDay();
+  const daysSinceMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+  const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  monday.setDate(monday.getDate() - daysSinceMonday);
+
+  const sunday = new Date(monday);
+  sunday.setDate(sunday.getDate() + 6);
+
+  const appointmentDate = date.slice(0, 10);
+
+  return (
+    appointmentDate >= localCalendarDate(monday) && appointmentDate <= localCalendarDate(sunday)
+  );
+}
+
+function localCalendarDate(date: Date): string {
+  return [
+    date.getFullYear(),
+    String(date.getMonth() + 1).padStart(2, '0'),
+    String(date.getDate()).padStart(2, '0'),
+  ].join('-');
 }
