@@ -129,3 +129,8 @@ These describe product capabilities; they are not evidence that we have configur
 
 - Added an accessible Today toggle beside the dashboard job counter. It composes with the existing address and status filters and restores all matching appointments when toggled off.
 - Added the requested empty state, “No appointments to show”, and a regression test confirming appointment dates are compared with the user's local calendar date.
+
+### 10 November 2026 — Dashboard this-week filter (MAR-20)
+
+- Added a This week toggle beside Today with the same visual and interaction pattern. The two date filters are mutually exclusive, and selecting the active filter again returns to all dates.
+- This week uses the user's local calendar week from Monday through Sunday and composes with the existing address and status filters. Regression tests cover both week boundaries and Sunday behavior.
