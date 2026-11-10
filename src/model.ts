@@ -143,3 +143,13 @@ export function validate(i: Inspection): string[] {
 export function status(i?: Inspection) {
   return i?.completed ? 'Completed' : i ? 'In progress' : 'Scheduled';
 }
+
+export function isAppointmentToday(date: string, today = new Date()): boolean {
+  const localDate = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, '0'),
+    String(today.getDate()).padStart(2, '0'),
+  ].join('-');
+
+  return date.slice(0, 10) === localDate;
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { blankInspection, sections, validate, status } from './model';
+import { blankInspection, sections, validate, status, isAppointmentToday } from './model';
 
 describe('inspection rules', () => {
   it('requires a condition for each section and notes for issues', () => {
@@ -23,5 +23,12 @@ describe('inspection rules', () => {
     expect(status(i)).toBe('In progress');
     i.completed = '2026-11-10';
     expect(status(i)).toBe('Completed');
+  });
+
+  it('matches appointments against the current local calendar date', () => {
+    const today = new Date(2026, 10, 10, 23, 30);
+
+    expect(isAppointmentToday('2026-11-10T09:00', today)).toBe(true);
+    expect(isAppointmentToday('2026-11-11T09:00', today)).toBe(false);
   });
 });
