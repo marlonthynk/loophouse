@@ -685,6 +685,15 @@ footer span {
     gap: 8px;
     margin: 24px 0 34px;
   }
+  .list-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .list-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
   .stat {
     padding: 13px 8px;
     gap: 8px;

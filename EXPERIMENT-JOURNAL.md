@@ -134,3 +134,4 @@ These describe product capabilities; they are not evidence that we have configur
 
 - Added a This week toggle beside Today with the same visual and interaction pattern. The two date filters are mutually exclusive, and selecting the active filter again returns to all dates.
 - This week uses the user's local calendar week from Monday through Sunday and composes with the existing address and status filters. Regression tests cover both week boundaries and Sunday behavior.
+- Follow-up testing found the new action could be pushed beyond the viewport on narrow screens because the inspection heading and all three actions shared one row. The mobile layout now stacks the actions beneath the heading and allows them to wrap.

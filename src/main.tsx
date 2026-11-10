@@ -250,7 +250,7 @@ function App() {
                 <h2>Your inspections</h2>
                 <p>All your upcoming and completed jobs in one place.</p>
               </div>
-              <div className="list-actions">
+              <div className="list-actions" role="group" aria-label="Filter inspections by date">
                 <span className="count">{filtered.length} jobs</span>
                 <button
                   className={'date-toggle' + (dateFilter === 'today' ? ' active' : '')}
