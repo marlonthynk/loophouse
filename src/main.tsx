@@ -20,6 +20,7 @@ import {
   blankInspection,
   validate,
   status,
+  isAppointmentToday,
   type Job,
   type Inspection,
   type Photo,
@@ -37,6 +38,7 @@ function App() {
   const [draft, setDraft] = useState<Inspection>();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('All');
+  const [todayOnly, setTodayOnly] = useState(false);
   const [saving, setSaving] = useState('Saved');
   const [error, setError] = useState('');
   const [errors, setErrors] = useState<string[]>([]);
@@ -165,7 +167,8 @@ function App() {
   const filtered = jobs.filter(
     (j) =>
       (j.address + ' ' + j.city).toLowerCase().includes(query.toLowerCase()) &&
-      (filter === 'All' || status(inspections.find((i) => i.jobId === j.id)) === filter),
+      (filter === 'All' || status(inspections.find((i) => i.jobId === j.id)) === filter) &&
+      (!todayOnly || isAppointmentToday(j.date)),
   );
 
   const counts = ['Scheduled', 'In progress', 'Completed'].map((s) =>
@@ -244,7 +247,17 @@ function App() {
                 <h2>Your inspections</h2>
                 <p>All your upcoming and completed jobs in one place.</p>
               </div>
-              <span className="count">{filtered.length} jobs</span>
+              <div className="list-actions">
+                <span className="count">{filtered.length} jobs</span>
+                <button
+                  className={'today-toggle' + (todayOnly ? ' active' : '')}
+                  type="button"
+                  aria-pressed={todayOnly}
+                  onClick={() => setTodayOnly((current) => !current)}
+                >
+                  <CalendarDays size={15} /> Today
+                </button>
+              </div>
             </div>
             <div className="toolbar">
               <label className="search">
@@ -295,7 +308,7 @@ function App() {
                   </button>
                 );
               })}
-              {!filtered.length && <p className="empty">No inspections match your search.</p>}
+              {!filtered.length && <p className="empty">No appointments to show</p>}
             </div>
             <div className="footnote">
               ✦ &nbsp; A little organisation goes a long way. You've got this.

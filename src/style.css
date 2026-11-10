@@ -217,6 +217,31 @@ p {
   font-size: 12px;
   font-weight: 700;
 }
+.list-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.today-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #ded5ed;
+  border-radius: 20px;
+  padding: 6px 12px;
+  background: white;
+  color: #6941b1;
+  font-size: 12px;
+  font-weight: 700;
+}
+.today-toggle:hover {
+  background: #f8f4fe;
+}
+.today-toggle.active {
+  border-color: #7547cc;
+  background: #7547cc;
+  color: white;
+}
 .toolbar {
   display: flex;
   gap: 12px;

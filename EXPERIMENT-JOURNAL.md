@@ -124,3 +124,8 @@ These describe product capabilities; they are not evidence that we have configur
 - The cleanup is local; it has not been committed or pushed. The separate PDF aspect-ratio investigation remains outside this change.
 - Follow-up: Marlon asked for clearer indentation in `model.ts`. Expanded the remaining compact object types, separated declarations with blank lines, and added braces around validation branches. Formatting checks, both tests and the production build passed again; the same build warnings remain.
 - Applied the same readability cleanup to storage, PDF generation, tests and the React entry point: separated functions, expanded control-flow blocks and object declarations, and gave each React state variable its own declaration. The Vite type-reference file needs no expansion. Formatting checks, both tests and the production build passed; the production asset hashes remained unchanged. Changes remain local.
+
+### 10 November 2026 — Dashboard today filter (MAR-17)
+
+- Added an accessible Today toggle beside the dashboard job counter. It composes with the existing address and status filters and restores all matching appointments when toggled off.
+- Added the requested empty state, “No appointments to show”, and a regression test confirming appointment dates are compared with the user's local calendar date.
