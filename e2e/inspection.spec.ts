@@ -120,6 +120,63 @@ test('inspection validates, preserves its photo draft across reload, and downloa
   await expect(page.getByRole('heading', { name: 'Inspection report', exact: true })).toBeVisible();
 });
 
+test('removed inspection photos and captions stay removed after reload', async ({ page }) => {
+  await page.getByRole('button', { name: /8 Willow Court/ }).click();
+  await page.getByRole('button', { name: 'Start inspection', exact: true }).click();
+
+  const exterior = page
+    .locator('section')
+    .filter({ has: page.getByRole('heading', { name: 'Exterior', exact: true }) });
+  await exterior.getByLabel('Condition').selectOption('Good');
+  await exterior
+    .getByLabel('Notes', { exact: true })
+    .fill('Fictional exterior answer retained after photo removal.');
+  await page
+    .getByLabel('Overall summary')
+    .fill('Fictional draft summary retained after photo removal.');
+
+  const image = await page.evaluate(() => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 240;
+    canvas.height = 160;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#7547cc';
+    ctx.fillRect(0, 0, 240, 160);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText('Photo removal regression fixture', 12, 80);
+    return canvas.toDataURL('image/png').split(',')[1];
+  });
+  await exterior.getByLabel('Add photo').setInputFiles({
+    name: 'fictional-photo-to-remove.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(image, 'base64'),
+  });
+  await exterior.getByLabel('Photo caption').fill('Caption that must stay removed');
+  await expect(exterior.getByRole('img')).toBeVisible();
+  await expect(page.locator('.save-state')).toHaveText('● Saved');
+
+  await exterior.getByRole('button', { name: 'Remove', exact: true }).click();
+  await expect(exterior.getByRole('img')).toHaveCount(0);
+  await expect(exterior.getByLabel('Photo caption')).toHaveCount(0);
+  await expect(page.locator('.save-state')).toHaveText('● Saved');
+
+  await page.reload();
+  await page.getByRole('button', { name: /8 Willow Court/ }).click();
+  await page.getByRole('button', { name: 'Resume inspection', exact: true }).click();
+  await expect(exterior.getByRole('img')).toHaveCount(0);
+  await expect(exterior.getByLabel('Photo caption')).toHaveCount(0);
+  await expect(exterior.getByText('Caption that must stay removed', { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(exterior.getByLabel('Condition')).toHaveValue('Good');
+  await expect(exterior.getByLabel('Notes', { exact: true })).toHaveValue(
+    'Fictional exterior answer retained after photo removal.',
+  );
+  await expect(page.getByLabel('Overall summary')).toHaveValue(
+    'Fictional draft summary retained after photo removal.',
+  );
+});
+
 test('date controls and inspection inputs remain usable on a narrow screen', async ({
   page,
 }, testInfo) => {

@@ -161,3 +161,10 @@ Marlon approved automatic execution after a recorded implementation/test plan, w
 Added Code completed — Pending test and Needs input as Started statuses. Extended the existing two Loops instead of adding another: dispatch carries the planning/testing contract; completion interprets four Codex outcomes and human replies in the original thread, with Slack receipts to avoid duplicate sends. Browser assertions that fail remain product failures; unavailable infrastructure is a distinct pending state. These are agent instructions, not deterministic enforcement of test execution. CI reruns the tests after publication. Cloud setup and lifecycle acceptance evidence will be recorded after the pilot.
 
 The original checkout contained journal conflict markers from earlier edits. Reconciled both histories in an isolated worktree, preserving source changes already merged on main and local experiment notes. Original checkout backed up before any integration.
+
+### 11 November 2026 — MAR-22 controlled photo-removal pilot
+
+- The controlled clarification handoff paused implementation until Marlon selected the photo-removal regression in the original task.
+- Added a focused Playwright scenario using the isolated fixture and fictional generated image. It uploads and captions a photo through the inspection UI, saves and removes it, then reloads/resumes to assert the photo and caption remain absent while the draft condition, notes and summary remain.
+- Normal `npm run verify` passed formatting, test TypeScript, five Vitest assertions and the production build. Chromium preflight then failed because the Cloud runtime lacks `libatk-1.0.so.0`; the receipt is `artifacts/verification.json` with `test_pending` and no browser report. The new Playwright scenario did not run and is not claimed as passing.
+- No application source or environment configuration changed. A local reviewer must run the exact cloud diff in a browser-capable worktree and match its changed-test hash before a ready handoff.
