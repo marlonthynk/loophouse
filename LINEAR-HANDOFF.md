@@ -2,7 +2,7 @@
 
 Configured and verified on 10 November 2026 at Marlon's request. This replaces the earlier requirement that the Codex sandbox itself must publish a PR.
 
-## Workflow
+## Original workflow — 10 November
 
 `Todo → In Progress → Pending PR creation → In Review → Done`
 
@@ -45,4 +45,22 @@ Evidence:
 
 Codex reported formatting, three tests, build and diff checks passing. These were not rerun independently in the local workspace during this configuration task. No application source was edited by this chat. MAR-17 was already Done with a GitHub PR link and MAR-16 Canceled when checked; neither was reopened for this setup.
 
-These setup notes remain local. They were recorded separately because EXPERIMENT-JOURNAL.md currently contains pre-existing unresolved merge-conflict markers alongside concurrent application changes; this task did not resolve or overwrite them.
+These notes were originally local because the journal contained concurrent conflict markers. On 11 November the histories were reconciled in an isolated worktree and included in the testing-workflow PR; the original checkout was preserved.
+
+
+## Updated workflow — 11 November 2026
+
+The existing two Loops now implement planning and verification before handoff. Dispatch still triggers on new Bug OR Improvement issues; it delegates missing-requirement questions to Codex so replies can continue the same task. Codex records docs/work/<ISSUE-ID>.md before code, then proceeds without approval unless a material question remains. AGENTS.md and TESTING.md are the repository contract. Reference prompts are in docs/linear-*-instructions.txt; the live Linear configuration is authoritative and is not automatically synced from those files.
+
+The completion trigger is now **New issue comment** within LoopHouse, so it can see all four final markers and substantive human answers in the original Codex conversation. It checks actual Codex authorship for outcome reports and ignores progress, unrelated comments and its own receipts. This broader trigger may create ignored runs for non-actionable comments; it is the tradeoff for handling ordinary replies without requiring the human to type a special marker.
+
+| Codex outcome | Linear status | Human action |
+| --- | --- | --- |
+| Verified implementation and changed behavior | Pending PR creation | Review task diff, Create PR |
+| Implementation complete, required infrastructure unavailable | Code completed — Pending test | Resolve blocker and retry the same task |
+| Material unanswered question | Needs input | Answer in original Codex thread, mention @Codex |
+| Actual product or implementation failure | In Progress | Fix failure; do not call it test-pending |
+
+The human assignee and Codex delegation remain unchanged. Human replies that answer the question/request retry with @Codex move back to In Progress; native integration resumes the original task. Lifecycle replies use LOOPHOUSE_OUTCOME_RECORDED / LOOPHOUSE_OUTCOME_NOTIFIED receipts keyed by result comment, task and outcome. The connected Slack integration sends Marlon the issue, same task and question/blocker/PR action. Delivery must be confirmed by the tool before a receipt is recorded.
+
+Local missing-browser classification and Linux CI have been verified. End-to-end cloud question/pending/ready routing is awaiting the MAR-22 pilot after PR #4 lands on main. Do not infer it passed from configuration alone.

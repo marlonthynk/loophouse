@@ -1,5 +1,8 @@
 import { spawnSync } from 'node:child_process';
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
+
+// Never link a previous run's browser evidence from a new failed/preflight-only run.
+rmSync('artifacts/playwright', { recursive: true, force: true });
 
 const git = (args) => spawnSync('git', args, { encoding: 'utf8' }).stdout?.trim() || '';
 const receipt = {
@@ -8,11 +11,12 @@ const receipt = {
   workingTree: git(['status', '--short']),
   status: 'failed',
   checks: [],
-  browserReport: 'artifacts/playwright/report/index.html',
+  browserReport: null,
 };
 
 const checks = ['format:check', 'test:typecheck', 'test', 'build', 'browser:check', 'test:e2e'];
 for (const script of checks) {
+  if (script === 'test:e2e') receipt.browserReport = 'artifacts/playwright/report/index.html';
   const started = Date.now();
   const result = spawnSync('npm', ['run', script], { stdio: 'inherit' });
   const passed = result.status === 0;

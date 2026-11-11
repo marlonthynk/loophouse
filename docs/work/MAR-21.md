@@ -34,3 +34,6 @@ A deliberate missing-browser run (PLAYWRIGHT_BROWSERS_PATH=/tmp/loophouse-missin
 Created Started statuses Code completed — Pending test and Needs input. Updated existing dispatch and completion Loops; the latter receives new issue comments, with actual Codex-author checks, four outcome routes, same-thread human continuation and deduplicated Slack handoffs. Cloud execution and actual lifecycle pilot remain pending; configuration is not proof of delivery.
 
 Baseline: origin/main 49f9362. The isolated implementation branch is codex/testing-workflow. Human review/merge is retained.
+
+
+GitHub PR #4 is published: https://github.com/marlonthynk/loophouse/pull/4. Initial Linux CI passed: https://github.com/marlonthynk/loophouse/actions/runs/42997007124. Added stale-report cleanup so a pending/preflight-only run cannot link a previous successful browser report. Controlled pilot MAR-22 is prepared but not delegated pending merge/release onto main.
