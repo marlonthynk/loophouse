@@ -151,7 +151,6 @@ These describe product capabilities; they are not evidence that we have configur
 - Added a This week toggle beside Today with the same visual and interaction pattern. The two date filters are mutually exclusive, and selecting the active filter again returns to all dates.
 - This week uses the user's local calendar week from Monday through Sunday and composes with the existing address and status filters. Regression tests cover both week boundaries and Sunday behavior.
 - Follow-up testing found the new action could be pushed beyond the viewport on narrow screens because the inspection heading and all three actions shared one row. The mobile layout now stacks the actions beneath the heading and allows them to wrap.
-- Follow-up testing found the new action could be pushed beyond the viewport on narrow screens because the inspection heading and all three actions shared one row. The mobile layout now stacks the actions beneath the heading and allows them to wrap.
 
 
 ## 11 November 2026 — plan and verify before PR handoff
@@ -164,7 +163,22 @@ The original checkout contained journal conflict markers from earlier edits. Rec
 
 ### 11 November 2026 — MAR-22 controlled photo-removal pilot
 
-- The controlled clarification handoff paused implementation until Marlon selected the photo-removal regression in the original task.
+- The controlled clarification handoff paused implementation until the local reviewer supplied the controlled photo-removal selection through the owner-authenticated thread in the original task.
 - Added a focused Playwright scenario using the isolated fixture and fictional generated image. It uploads and captions a photo through the inspection UI, saves and removes it, then reloads/resumes to assert the photo and caption remain absent while the draft condition, notes and summary remain.
 - Normal `npm run verify` passed formatting, test TypeScript, five Vitest assertions and the production build. Chromium preflight then failed because the Cloud runtime lacks `libatk-1.0.so.0`; the receipt is `artifacts/verification.json` with `test_pending` and no browser report. The new Playwright scenario did not run and is not claimed as passing.
 - No application source or environment configuration changed. A local reviewer must run the exact cloud diff in a browser-capable worktree and match its changed-test hash before a ready handoff.
+
+
+### 11 November 2026 — cloud pilot: actual outcomes and a manual test fallback
+
+PR #4 merged after Marlon explicitly approved it. The original working copy was advanced safely to main after confirming all its source edits and journal text were already preserved upstream; its old state remains in a named Git stash. Five units and three browser journeys passed in that original folder.
+
+The first cloud attempt failed before it could supply a plan. Retaining setup logs/exit status let the next attempt diagnose blocked Ubuntu snapshot requests. Downloading Chromium alone then proved a missing libatk-1.0.so.0 at actual launch. A temporary configuration using signed standard Ubuntu repositories also received proxy 403/502 responses. Those source experiments were removed. The active Legacy environment now keeps diagnostic evidence and lets the agent plan/code, while the real verification command still reports missing browsers as test_pending. Runtime internet, credentials, proxy and signature checks were not weakened. This cloud-browser limitation remains unresolved.
+
+The actual pilot exercised Needs input → In Progress after the controlled reply → Code completed — Pending test. Verified the question and pending-test DMs independently in Slack, including recipient and original task/thread links. The completion Loop now also handles a startup failure with no marker, and edits one actionable handoff comment to hold both receipts instead of adding receipt-only comments. This reduces custom comment noise; the user's own native Linear comment notifications are separate.
+
+A local reviewer applied the cloud diff, matched the test SHA-256 and ran the full suite: five units and four Playwright journeys passed, including photo/caption removal surviving reload while other answers remained. No app/test edits were needed. Only after that real run did Codex acknowledge externally supplied verification and the Loop move MAR-22 to Pending PR creation. The Cloud result was kept separately as test_pending; a passing local review did not repair Cloud Chromium. Source changes are published on codex/mar-22-pilot-review for human PR creation.
+
+The first additional GitHub run stalled downloading optional font packages from the Azure Ubuntu mirror; its log showed all required Chromium runtime libraries already installed. Canceled that superseded run and changed CI to install the pinned Chromium binary, retain the launch preflight/full test suite, and cap the job at ten minutes. New CI evidence will be recorded after execution.
+
+Evidence: [pilot issue](https://linear.app/thynksoftware/issue/MAR-22/workflow-pilot-questions-unavailable-browser-and-verified-completion), [current cloud task](https://chatgpt.com/s/cd_6af4806b06fc8191a97b562204d3f5bf), [question DM](https://grech-home.slack.com/archives/D0C7RCVGMNE/p1794409957140089), [pending-test DM](https://grech-home.slack.com/archives/D0C7RCVGMNE/p1794410323111339).

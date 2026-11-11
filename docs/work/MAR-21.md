@@ -37,3 +37,21 @@ Baseline: origin/main 49f9362. The isolated implementation branch is codex/testi
 
 
 GitHub PR #4 is published: https://github.com/marlonthynk/loophouse/pull/4. Initial Linux CI passed: https://github.com/marlonthynk/loophouse/actions/runs/42997007124. Added stale-report cleanup so a pending/preflight-only run cannot link a previous successful browser report. Controlled pilot MAR-22 is prepared but not delegated pending merge/release onto main.
+
+
+## Cloud rollout — 11 November, after approval
+
+Marlon approved merging PR #4 and running the cloud pilot. Merged at 18536ec5fcc595f69d026cd516cecdb7d612bd1d. Original checkout was safely advanced to main after confirming its source edits were already upstream and journal text preserved; its previous state remains in stash `LoopHouse pre-testing-rollout original workspace (preserved)`. Full verification passed there: five units, three Chromium journeys.
+
+MAR-22 started in loophouse-linear, task task_e_6af47ec51718832e8ac8e79ed1aadbea, but returned only “Codex couldn't complete this task” with zero changed files. The CLI confirms error, not ready. Completion Loop requested a structured diagnostic report and kept In Progress. No question/pending/ready handoff has passed yet. Investigating startup by retaining setup stdout/exit status for the agent instead of losing all diagnostics when setup exits.
+
+
+The diagnostic retry returned a real blocked result: APT index refresh from snapshot.ubuntu.com failed through the proxy (HTTP 403/502); Playwright dependency installation exited 100. Setup exit receipt was 1. Completion kept In Progress and recorded/sent the blocked Slack handoff. Next experiment: install Chromium without forcing an APT refresh, then actually launch it to determine whether universal already has its needed libraries. Do not assume missing packages from APT's unavailable index.
+
+
+Browser-only setup confirmed a real missing `libatk-1.0.so.0`. A temporary signed standard-Ubuntu APT configuration also failed through the proxy (Ubuntu Noble archive 403/security 502), so the blocker is unresolved. Stopped mirror retries. Pilot now exercises the intended unavailable-browser path: plan/question despite infrastructure failure, implement regression, emit test-pending, then local reviewer verifies the exact cloud diff. Any later ready evidence must clearly distinguish local/CI results from unperformed cloud browser tests.
+
+
+Observed pilot routes: Needs input (question + Slack independently verified), owner reply → In Progress in the same task, Code completed — Pending test (actual unavailable runtime + Slack independently verified), then exact-hash local verification → Pending PR creation. Actual local result is five units and four browser journeys passing. The initial Cloud Chromium-launch acceptance remains unmet due package-proxy/runtime-library availability; do not close this as a fully automatic Cloud browser rollout. Added structured handling for unmarked platform failures and consolidated outcome receipts.
+
+A separate GitHub run stalled at extra font downloads despite required runtime libraries being present. CI now installs Chromium without forcing the redundant system-package refresh and has a ten-minute bound; its actual result is pending. No application source changed.

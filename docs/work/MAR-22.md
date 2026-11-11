@@ -6,7 +6,7 @@ Exercise the planning, clarification, unavailable-browser, manual-review and ver
 
 ## Provisional implementation plan (recorded before implementation)
 
-1. The human selected photo removal: upload a fictional image through the actual UI, caption it, wait for the draft to save, remove it, then reload and resume the inspection.
+1. The local reviewer supplied the controlled photo-removal selection through the owner-authenticated thread: upload a fictional image through the actual UI, caption it, wait for the draft to save, remove it, then reload and resume the inspection.
 2. Add one focused Playwright regression that asserts the removed photo and caption stay absent while the condition, notes and overall summary remain saved.
 3. Use only the isolated Playwright origin, fresh browser context, fixed clock and fictional fixture data; do not change application code unless the regression exposes a genuine defect in this flow.
 4. Run `npm run verify` normally. Do not use an artificial missing-browser override or retry package/network configuration. Preserve the receipt and distinguish checks that pass from the browser preflight that cannot run in Cloud.
@@ -17,7 +17,7 @@ Exercise the planning, clarification, unavailable-browser, manual-review and ver
 
 | Criterion | Observable assertion |
 | --- | --- |
-| The clarification route pauses work | The provisional note existed before implementation, one numbered scenario question was asked, and the human selected photo removal in the same task |
+| The clarification route pauses work | The provisional note existed before implementation, one numbered scenario question was asked, and the local reviewer supplied the controlled selection in the same task |
 | Only the chosen regression is added | The focused Playwright change covers photo removal; reset-data coverage remains outside this pilot |
 | Photo removal persists | Upload and caption a fictional image through the UI, save, remove it, reload/resume, and assert that its image and caption do not return |
 | Other draft answers persist | After the same reload, assert that the selected condition, notes and overall summary retain their saved values |
@@ -27,7 +27,7 @@ Exercise the planning, clarification, unavailable-browser, manual-review and ver
 
 ## Likely files
 
-- `tests/e2e/inspection.spec.ts` or the closest existing Playwright journey for the chosen behavior
+- `e2e/inspection.spec.ts`
 - `docs/work/MAR-22.md`
 - `EXPERIMENT-JOURNAL.md`
 
@@ -48,3 +48,10 @@ Application source is not expected to change unless the focused regression expos
 - `npm run verify` result: `test_pending`. Formatting, test TypeScript, five Vitest assertions and the production build passed. Chromium preflight failed to launch because `libatk-1.0.so.0` is unavailable, so the new Playwright scenario did not run and no browser report was produced.
 - Receipt: `artifacts/verification.json` (ignored local evidence, not a public URL). Its `browserReport` is `null` because execution stopped at preflight.
 - Recovery: a local reviewer must apply this exact cloud diff in a browser-capable worktree, confirm the changed-file SHA-256 hash, run `npm run verify`, and report the result before any ready handoff.
+
+
+## Local reviewer verification
+
+The local Codex reviewer applied the exact cloud diff in an isolated worktree and confirmed e2e/inspection.spec.ts SHA-256 7d358b07e38cf1e4f15d8c5ec1c465f7589ad8645e0703e50856b9ca5e835a64. npm run verify passed on 11 November 2026 at 15:18:42–15:18:51 UTC: formatting, test TypeScript, five unit assertions, production build, Chromium preflight and all four browser journeys. The photo-removal test passed without source/test edits. Mobile/report screenshots were inspected. Local receipt: artifacts/verification.json (passed); HTML report: artifacts/playwright/report/index.html. These ignored paths are not public download links.
+
+Published exact test on branch codex/mar-22-pilot-review at 0cb9c59fe6a9159703ff4ededca97ebeb97bd1b0. This is separate from the unpublished cloud commit b4506aa0d1887bd607da2e3d15d94640cbb1246b. A matching local run supplied actual browser verification; Cloud's receipt remains test_pending. Codex acknowledged the externally supplied evidence and the completion Loop moved MAR-22 to Pending PR creation. Human PR review remains outstanding.

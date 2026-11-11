@@ -24,7 +24,7 @@ Individual commands are `npm test`, `npm run build`, `npm run browser:check` and
 
 The fixture seeds six fictional appointments in a fresh browser context on `http://127.0.0.1:4175`. Its clock is fixed at 12 November 2026 in Europe/London. It does not access storage on the user's normal port 5173. Playwright owns and stops its Vite test server; an occupied test port fails rather than silently testing a different server.
 
-1. Today and This week filtering, Sunday/next-week exclusion, toggle-off, address/status composition and empty state.
+1. Today and This week filtering, current-Sunday inclusion and previous-Sunday/next-Monday exclusion, toggle-off, address/status composition and empty state.
 2. Required answers and issue notes, actual photo upload, caption and note persistence through reload/resume, explicit completion, reopening a completed report, and PDF header/text/caption/embedded image.
 3. A 390-pixel viewport: usable date buttons and inspection controls, saved input and no horizontal document overflow. Screenshots are attached for visual inspection.
 
@@ -56,3 +56,12 @@ The setup must use a repository revision containing these files. Keep environmen
 See AGENTS.md for exact outcome markers. Code with required passing checks enters Pending PR creation. Finished code awaiting unavailable tests enters Code completed — Pending test. Questions enter Needs input and are sent to the human in Slack with a link to the Linear Codex thread. Fix real failing assertions while In Progress. Reply in the original thread and mention @Codex to continue the same task.
 
 The completion Loop checks the reported outcome/evidence; it is an agent interpreting a report, not an independent deterministic proof. CI reruns the tests after a human creates the PR, and human review remains necessary before merging.
+
+
+## Observed Legacy cloud limitation — 11 November 2026
+
+The MAR-22 pilot found that this account's Ubuntu Noble image lacked Chromium runtime libraries. APT requests to both the configured snapshot and the standard signed Ubuntu archive/security repositories returned proxy HTTP 403/502. Downloading Chromium alone succeeded, but an actual launch failed with missing libatk-1.0.so.0. Local and GitHub Linux browser checks passing did not prove this particular cloud image worked.
+
+The live Legacy setup now prepares npm packages and the Chromium download, retaining /tmp/loophouse-cloud-setup.log and /tmp/loophouse-cloud-setup.exit. It permits the agent to plan and code after a failed preflight, so failure can be reported. This does not turn failed setup into passing verification: npm run verify still stops at browser:check with test_pending. The environment description explicitly records the blocker. Temporary alternative APT-source experiments were removed; no agent internet, proxy, credential or signature-verification controls were weakened. The generic scripts/cloud-setup.sh remains the full dependency-install recipe for an environment whose package repositories are reachable.
+
+For manual verification, use the installed Codex CLI to inspect the actual task identifier with codex cloud list, read codex cloud diff, and apply the diff in a clean isolated worktree. Compare changed code/test file SHA-256 hashes with the cloud result. Run npm ci and npm run verify in that browser-capable worktree. Record the exact files/commit, commands, report, results and remaining limits back in the original Linear Codex thread. These are local reviewer results, never cloud-browser results. Required behavior stays unverified until that actual run passes; a branch/commit or prepared PR description alone is insufficient.

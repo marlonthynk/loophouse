@@ -3,6 +3,7 @@ on: [push, pull_request]
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -10,7 +11,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium
+      # Hosted runners have Chromium's system libraries; preflight verifies them.
+      - run: npx playwright install chromium
       - run: npm run verify
       - uses: actions/upload-artifact@v4
         if: always()
