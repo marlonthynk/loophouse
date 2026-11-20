@@ -144,6 +144,20 @@ export function status(i?: Inspection) {
   return i?.completed ? 'Completed' : i ? 'In progress' : 'Scheduled';
 }
 
+export function greetingForTime(now = new Date()): string {
+  const hour = now.getHours();
+
+  if (hour < 12) {
+    return 'Good morning';
+  }
+
+  if (hour < 18) {
+    return 'Good afternoon';
+  }
+
+  return 'Good evening';
+}
+
 export function isAppointmentToday(date: string, today = new Date()): boolean {
   return date.slice(0, 10) === localCalendarDate(today);
 }

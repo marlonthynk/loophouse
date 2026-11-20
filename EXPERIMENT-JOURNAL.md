@@ -161,3 +161,10 @@ Marlon approved automatic execution after a recorded implementation/test plan, w
 Added Code completed — Pending test and Needs input as Started statuses. Extended the existing two Loops instead of adding another: dispatch carries the planning/testing contract; completion interprets four Codex outcomes and human replies in the original thread, with Slack receipts to avoid duplicate sends. Browser assertions that fail remain product failures; unavailable infrastructure is a distinct pending state. These are agent instructions, not deterministic enforcement of test execution. CI reruns the tests after publication. Cloud setup and lifecycle acceptance evidence will be recorded after the pilot.
 
 The original checkout contained journal conflict markers from earlier edits. Reconciled both histories in an isolated worktree, preserving source changes already merged on main and local experiment notes. Original checkout backed up before any integration.
+
+## 20 November 2026 — Time-appropriate dashboard greeting (MAR-23)
+
+- Replaced the dashboard's fixed “Good morning” title with a greeting based on the browser's local hour: morning before 12:00, afternoon from 12:00 through 17:59, and evening from 18:00 onward.
+- Added a pure greeting helper and unit coverage for all three periods and the 12:00 and 18:00 boundaries.
+- `npm run format:check`, `npm run test:typecheck`, `npm test` (six tests), and `npm run build` passed. The build retained non-failing large-chunk and `lucide-react` directive warnings.
+- Per MAR-23's explicit manual-testing decision, Chromium, Playwright, `npm run verify`, screenshots, and manual UI checks were not run. Human verification of the dashboard greeting, narrow mobile layout, persistence, and unchanged PDF behavior remains pending; detailed steps and expected results are recorded in `docs/work/MAR-23.md`.
