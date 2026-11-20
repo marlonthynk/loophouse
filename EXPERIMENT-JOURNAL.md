@@ -168,3 +168,11 @@ The original checkout contained journal conflict markers from earlier edits. Rec
 - Added a pure greeting helper and unit coverage for all three periods and the 12:00 and 18:00 boundaries.
 - `npm run format:check`, `npm run test:typecheck`, `npm test` (six tests), and `npm run build` passed. The build retained non-failing large-chunk and `lucide-react` directive warnings.
 - Per MAR-23's explicit manual-testing decision, Chromium, Playwright, `npm run verify`, screenshots, and manual UI checks were not run. Human verification of the dashboard greeting, narrow mobile layout, persistence, and unchanged PDF behavior remains pending; detailed steps and expected results are recorded in `docs/work/MAR-23.md`.
+
+## 20 November 2026 — Dashboard demo indicator (MAR-24)
+
+- Marlon verified Linear Code's Agent: Codex, Model: Auto, with Linear credits, resolving the initial configuration question in the same session. Preserved Marlon as human assignee and recorded the implementation/test plan on MAR-24 and in `docs/work/MAR-24.md` before implementation.
+- Added a static “Demo data” badge beside the workspace label above the dashboard greeting. The label row wraps naturally. No jobs, storage, filters, inspection logic or reports were changed.
+- `npm run format:check`, `npm run test:typecheck`, `npm test` (six tests), `npm run build`, and `git diff --check` passed. Existing build warnings concern large chunks and `lucide-react` directives; npm also reported an unrecognized environment configuration option. Logs are local, uncommitted files under `artifacts/mar-24/` (`format.log`, `typecheck.log`, `unit.log`, `build.log`).
+- Per MAR-24's explicit instruction, no Chromium, Playwright, aggregate verification command, screenshots or manual UI checks were run. Desktop/narrow layout, controls, persistence and PDF checks remain pending Marlon's execution and confirmation; expected results are in the work note.
+- Publication will use GitHub's supported `[skip ci]` commit marker to prevent the existing push/pull-request workflow from installing Chromium or running Playwright. The actual remote branch, draft PR and absence of workflow/check runs will be checked and recorded on MAR-24. Skipped CI is not a passing CI run. No merge or deployment is authorised.

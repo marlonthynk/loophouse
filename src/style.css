@@ -137,6 +137,24 @@ p {
   color: #8b67c9;
   margin-bottom: 10px;
 }
+.workspace-labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+.workspace-labels .eyebrow {
+  margin-bottom: 0;
+}
+.demo-indicator {
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #f0eafb;
+  color: #6941b1;
+  font-size: 12px;
+  font-weight: 700;
+}
 .reset,
 .secondary {
   background: #fff;

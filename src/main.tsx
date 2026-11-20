@@ -206,7 +206,10 @@ function App() {
           <>
             <div className="heading">
               <div>
-                <div className="eyebrow">YOUR WORKSPACE</div>
+                <div className="workspace-labels">
+                  <div className="eyebrow">YOUR WORKSPACE</div>
+                  <span className="demo-indicator">Demo data</span>
+                </div>
                 <h1>
                   {greetingForTime()}, Alex <span>✳</span>
                 </h1>
