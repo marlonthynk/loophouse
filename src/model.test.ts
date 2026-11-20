@@ -4,6 +4,7 @@ import {
   sections,
   validate,
   status,
+  greetingForTime,
   isAppointmentToday,
   isAppointmentThisWeek,
 } from './model';
@@ -30,6 +31,15 @@ describe('inspection rules', () => {
     expect(status(i)).toBe('In progress');
     i.completed = '2026-11-10';
     expect(status(i)).toBe('Completed');
+  });
+
+  it('uses a greeting appropriate for the local time of day', () => {
+    expect(greetingForTime(new Date(2026, 10, 10, 0, 0))).toBe('Good morning');
+    expect(greetingForTime(new Date(2026, 10, 10, 11, 59))).toBe('Good morning');
+    expect(greetingForTime(new Date(2026, 10, 10, 12, 0))).toBe('Good afternoon');
+    expect(greetingForTime(new Date(2026, 10, 10, 17, 59))).toBe('Good afternoon');
+    expect(greetingForTime(new Date(2026, 10, 10, 18, 0))).toBe('Good evening');
+    expect(greetingForTime(new Date(2026, 10, 10, 23, 59))).toBe('Good evening');
   });
 
   it('matches appointments against the current local calendar date', () => {

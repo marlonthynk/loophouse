@@ -20,6 +20,7 @@ import {
   blankInspection,
   validate,
   status,
+  greetingForTime,
   isAppointmentToday,
   isAppointmentThisWeek,
   type Job,
@@ -207,7 +208,7 @@ function App() {
               <div>
                 <div className="eyebrow">YOUR WORKSPACE</div>
                 <h1>
-                  Good morning, Alex <span>✳</span>
+                  {greetingForTime()}, Alex <span>✳</span>
                 </h1>
                 <p>Here's what's happening with your inspections.</p>
               </div>
