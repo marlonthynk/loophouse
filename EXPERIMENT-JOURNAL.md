@@ -161,3 +161,7 @@ Marlon approved automatic execution after a recorded implementation/test plan, w
 Added Code completed — Pending test and Needs input as Started statuses. Extended the existing two Loops instead of adding another: dispatch carries the planning/testing contract; completion interprets four Codex outcomes and human replies in the original thread, with Slack receipts to avoid duplicate sends. Browser assertions that fail remain product failures; unavailable infrastructure is a distinct pending state. These are agent instructions, not deterministic enforcement of test execution. CI reruns the tests after publication. Cloud setup and lifecycle acceptance evidence will be recorded after the pilot.
 
 The original checkout contained journal conflict markers from earlier edits. Reconciled both histories in an isolated worktree, preserving source changes already merged on main and local experiment notes. Original checkout backed up before any integration.
+
+### 20 November 2026 — manual browser testing decision
+
+Marlon requested that Chromium and Playwright not run in this workflow. Automated formatting, TypeScript, unit tests and build remain; changed UI behavior is handed to him with a specific manual checklist and stays pending until he reports results. Implementation and Loop routing must be verified before use.

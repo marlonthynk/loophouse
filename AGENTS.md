@@ -10,18 +10,16 @@ If a material requirement cannot be resolved from the issue, comments or reposit
 
 ## Verify user behavior
 
-For code changes run `npm run verify`: formatting, Vitest unit tests, TypeScript/production build, Chromium launch preflight and Playwright browser tests. Add a focused behavior test for the issue when appropriate. For bugs, demonstrate the failure before the fix where practical, then show it passing. For UI changes, exercise the actual changed flow, inspect relevant desktop/mobile screenshots and preserve evidence. Screenshots supplement assertions; they do not replace them. Use computer use for additional exploration only when the task actually has that tool.
+Run `npm run verify` for code changes: formatting, test TypeScript, unit tests and the production build. Do not run Chromium or Playwright. Record actual commands and results. Create a specific manual test checklist for the changed functionality, including expected results and relevant desktop/mobile, persistence and PDF cases. Use fictional data. A passing automated receipt covers code checks only; it does not prove browser behavior.
 
-The browser fixture uses isolated storage on port 4175, a fixed clock and fictional jobs. Never reset or reuse the user's development browser. Test PDFs for relevant contents, not only download existence. Do not weaken tests, skip required browser verification, or treat missing infrastructure as a pass. Fix assertion failures before handoff. Documentation-only changes can use a proportionate check; say why browser verification is not applicable.
-
-Record commands, actual results, limitations and artifact paths in the work note and journal. Read `artifacts/verification.json` after a verification run. The receipt must belong to the current implementation; rerun affected checks after subsequent code or test changes. Reports/screenshots live under `artifacts/` and are not committed. Link only artifacts the task or CI actually exposes; otherwise provide task-relative paths without claiming they are downloadable. GitHub Actions reruns verification after publication and retains the report.
+Record the plan, results, checklist, limitations and commit in the work note and journal. UI behavior remains pending until the human tests the exact changes and records the outcome. Product failures remain blocked. Never claim a browser test ran when it did not.
 
 ## Final outcome sent back to Linear
 
 Emit exactly one of these markers as the first line of the final reply (never put outcome markers in progress comments):
 
-- `CODEX_IMPLEMENTATION_READY`: implementation complete and required checks passed. Include `Verification: passed`, commands/results, browser scenarios, plan path, artifact paths, limitations and known commit. Documentation-only work must explicitly state `Browser verification: not applicable` and its reason.
-- `CODEX_TEST_PENDING`: implementation written, but required verification could not run because a browser, dependency or environment capability is unavailable. Include `Verification: pending`, what was and was not tested, the exact infrastructure blocker and a concrete recovery step. Do not describe it as verified.
+- `CODEX_IMPLEMENTATION_READY`: implementation complete and required checks passed. Include `Verification: passed`, commands/results, manual test results, plan path, artifact paths, limitations and known commit. Documentation-only work must explicitly state `Browser verification: not applicable` and its reason.
+- `CODEX_TEST_PENDING`: implementation and automated code checks complete, but human manual testing is pending. Include `Verification: pending`, automated results, a manual testing checklist, task link, and instructions to review changes and create a PR. Do not describe it as verified.
 - `CODEX_NEEDS_INPUT`: the task needs a human answer. Include `Verification: incomplete`, numbered questions, why they matter, partial work, and `Resume stage: planning|implementation|verification`. Stop until the human replies in this same task.
 - `CODEX_IMPLEMENTATION_BLOCKED`: implementation or assertions still fail and cannot be resolved within scope. Include `Verification: failed`, reproduction/check evidence and the remaining work. Do not use the pending-test marker for an observed product failure.
 
