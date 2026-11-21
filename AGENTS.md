@@ -10,7 +10,7 @@ Prepare fresh Linux sessions with `bash scripts/cloud-setup.sh`: locked npm depe
 
 ## Plan, then proceed
 
-Before changing implementation, record a short implementation and test plan in `docs/work/<ISSUE-ID>.md` and explain it in the task. Map each acceptance criterion to an observable assertion, list likely files and edge cases, and identify the data and tools needed. Proceed automatically after recording the plan. Do not wait for plan approval unless the issue explicitly requires it.
+Before changing implementation, record a short implementation and test plan on the Linear issue or in its existing agent session before editing. Map each acceptance criterion to an observable assertion, list likely files and edge cases, and identify the data and tools needed. Proceed automatically after recording the plan. Do not wait for plan approval unless the issue explicitly requires it.
 
 If a material requirement cannot be resolved from the issue, comments or repository, stop and ask concise, numbered questions in the same task. Do not invent requirements or ask the user to answer things the repository already establishes. Preserve any partial work and the plan. A human answers in the same Linear Codex thread, mentioning @Codex to continue the existing task; do not create a replacement task.
 
@@ -20,13 +20,13 @@ For code changes run `npm run verify`: formatting, test TypeScript, Vitest unit 
 
 The browser fixture uses isolated storage on port 4175, a fixed clock and fictional jobs. Never reset or reuse the user's development browser. Test PDFs for relevant contents, not only download existence. Do not weaken tests, skip required browser verification, or treat missing infrastructure as a pass. Fix assertion failures before handoff. Documentation-only changes can use a proportionate check with an explicit reason, except testing-workflow rollouts such as MAR-25, which must run the full existing browser journeys even when only documentation changes.
 
-Record commands, actual results, limitations and artifact paths in the work note and journal. Read `artifacts/verification.json` after a verification run. The receipt must belong to the current implementation; rerun affected checks after subsequent code or test changes. Reports/screenshots live under `artifacts/` and are not committed. Link only artifacts the task or CI actually exposes; otherwise provide task-relative paths without claiming they are downloadable. GitHub Actions reruns verification after publication and retains the report.
+Record commands, actual results, limitations and artifact paths on the issue or in its session and, when relevant to the experiment, in the journal. Read `artifacts/verification.json` after a verification run. The receipt must belong to the current implementation; rerun affected checks after subsequent code or test changes. Reports/screenshots live under `artifacts/` and are not committed. Link only artifacts the task or CI actually exposes; otherwise provide task-relative paths without claiming they are downloadable. GitHub Actions reruns verification after publication and retains the report.
 
 ## Final outcome sent back to Linear
 
 Emit exactly one of these markers as the first line of the final reply (never put outcome markers in progress comments):
 
-- `CODEX_IMPLEMENTATION_READY`: implementation complete and required checks passed. Include `Verification: passed`, commands/results, browser scenarios, plan path, artifact paths, limitations and known commit. Only eligible documentation-only work that did not require browsers may state `Browser verification: not applicable`, with its reason. Workflow rollouts must report actual browser results.
+- `CODEX_IMPLEMENTATION_READY`: implementation complete and required checks passed. Include `Verification: passed`, commands/results, browser scenarios, plan location, artifact paths, limitations and known commit. Only eligible documentation-only work that did not require browsers may state `Browser verification: not applicable`, with its reason. Workflow rollouts must report actual browser results.
 - `CODEX_TEST_PENDING`: implementation written, but required verification could not run because a browser, dependency or environment capability is unavailable. Include `Verification: pending`, what was and was not tested, the exact infrastructure blocker and a concrete recovery step. Do not describe it as verified.
 - `CODEX_NEEDS_INPUT`: the task needs a human answer. Include `Verification: incomplete`, numbered questions, why they matter, partial work, and `Resume stage: planning|implementation|verification`. Stop until the human replies in this same task.
 - `CODEX_IMPLEMENTATION_BLOCKED`: implementation or assertions still fail and cannot be resolved within scope. Include `Verification: failed`, reproduction/check evidence and the remaining work. Do not use the pending-test marker for an observed product failure.
