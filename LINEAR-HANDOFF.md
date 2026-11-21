@@ -1,4 +1,26 @@
-# LoopHouse: manual PR handoff
+# LoopHouse: verified draft PR handoff
+
+## Current workflow — 21 November 2026 (MAR-25)
+
+This policy supersedes the manual publication and external Codex/Legacy routing described in the historical sections below. Browser testing is re-enabled. Use Linear's own coding environment for marlonthynk/loophouse, current main, configured Agent Codex and Model Auto. Do not probe model identity or change billing/model settings. Preserve the human assignee and continue in the original session. Keep all writes on the triggering issue. Send no Slack messages.
+
+1. Record `docs/work/<ISSUE-ID>.md` before implementation: problem/scope, steps, acceptance criteria mapped to observable tests, edge cases, data/tools and evidence plan. Explain the plan, then proceed automatically; only material unresolved questions pause the task.
+2. Prepare this checkout with `bash scripts/cloud-setup.sh`, run `npm run browser:check` and full `npm run verify`. Add useful issue-specific regression/feature tests, exercise actual changed flows and relevant negative/mobile/persistence/PDF behavior. Inspect desktop/mobile screenshots and current receipt/report. Workflow rollouts require real browser journeys even when documentation-only. Use isolated fictional data and never reset the user's browser.
+3. Record actual commands, tested revision/working tree, results, evidence paths/accessible links and limitations in the plan and append the journal. Do not suppress assertions, classify failures as infrastructure without evidence, or claim an artifact path is a download link.
+4. Commit and push the task branch using native `git_push`; automatically publish a real draft PR using `create_pull_request` with `draft: true`, against main, associated with the issue. Verify actual PR URL, draft/base/head. Preserve current human PR content and media when updating it. A prepared description or local commit is insufficient.
+5. Keep CI enabled, inspect its actual result separately from session verification and report pending truthfully. Do not wait for CI unless explicitly asked to monitor it. Human review/merge remains required; never merge, deploy, force-push, push main or mark Done.
+
+| Result | Agent updates triggering issue to | Handoff |
+| --- | --- | --- |
+| Required verification passed and real draft PR published | In Review | Actual review link, head, session results, CI status and evidence |
+| Verified work, publication unavailable | Pending PR creation | Exact publication blocker and recovery, preserved branch/commit |
+| Required browser/dependency/environment capability unavailable | Code completed — Pending test | Exact error, checks run/not run, concrete same-session recovery |
+| Actual assertion failure or unfinished implementation | In Progress | Failed evidence and remaining fix |
+| Material unanswered requirement | Needs input | Numbered questions, why needed, partial work and resume stage |
+
+The agent posts the final handoff and applies these states itself: the older Loops are paused. No live Loop configuration change is claimed by updating repository reference prompts. `docs/linear-dispatch-instructions.txt` and `docs/linear-completion-instructions.txt` are aligned reference instructions if automation is later re-enabled; do not create a duplicate session. See AGENTS.md for final outcome markers and TESTING.md for setup and evidence details.
+
+## Historical configuration (superseded; retained as observations)
 
 Configured and verified on 10 November 2026 at Marlon's request. This replaces the earlier requirement that the Codex sandbox itself must publish a PR.
 
