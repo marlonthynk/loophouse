@@ -2,7 +2,7 @@
 
 Date: 10 November 2026
 
-Status: Approved by Marlon on 10 November 2026; baseline implementation started. See EXPERIMENT-JOURNAL.md for verification and outstanding checks.
+Status: Historical proposal approved on 10 November 2026. The baseline has since been built; consult the README and experiment journal for current state.
 
 Confirmed: LoopHouse name; React and TypeScript.
 
@@ -84,7 +84,7 @@ Limits: this is single-user demo storage. Records do not sync between devices, b
 
 The baseline uses one demo inspector and seeded jobs. Authentication, creating/scheduling jobs, multiple inspectors, cloud synchronisation and formal inspection standards remain potential future Linear issues.
 
-After the baseline is reviewed, publish the source to GitHub and configure the Linear learning project and first manual bug-fix exercise. The GitHub owner and repository visibility remain to be selected before repository creation. Configuring or enabling Loops is a subsequent step.
+At the time of this proposal, publishing the repository and configuring Linear Loops were subsequent steps. See the journal for what actually happened.
 
 ## Storage references
 
