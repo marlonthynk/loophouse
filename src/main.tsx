@@ -13,6 +13,7 @@ import {
   Check,
   RotateCcw,
   FileText,
+  Plus,
 } from 'lucide-react';
 import {
   sections,
@@ -35,7 +36,9 @@ import './style.css';
 function App() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [inspections, setInspections] = useState<Inspection[]>([]);
-  const [page, setPage] = useState<'dashboard' | 'details' | 'form' | 'report'>('dashboard');
+  const [page, setPage] = useState<'dashboard' | 'new' | 'details' | 'form' | 'report'>(
+    'dashboard',
+  );
   const [job, setJob] = useState<Job>();
   const [draft, setDraft] = useState<Inspection>();
   const [query, setQuery] = useState('');
@@ -246,6 +249,15 @@ function App() {
                 </div>
               ))}
             </div>
+            <button
+              className="primary new-inspection"
+              onClick={() => {
+                setError('');
+                setPage('new');
+              }}
+            >
+              <Plus size={17} /> New inspection
+            </button>
             <div className="list-head">
               <div>
                 <h2>Your inspections</h2>
@@ -329,7 +341,19 @@ function App() {
             </div>
           </>
         ) : null}
-        {page !== 'dashboard' && job && (
+        {page === 'new' && (
+          <NewInspection
+            onCancel={() => setPage('dashboard')}
+            onCreated={(created) => {
+              setJobs((old) => [...old, created]);
+              setQuery('');
+              setFilter('All');
+              setDateFilter('all');
+              setPage('dashboard');
+            }}
+          />
+        )}
+        {page !== 'dashboard' && page !== 'new' && job && (
           <>
             <button
               className="back"
@@ -671,6 +695,104 @@ function App() {
       <footer>
         LoopHouse <span>·</span> Made for the details that matter.
       </footer>
+    </>
+  );
+}
+
+function NewInspection({
+  onCancel,
+  onCreated,
+}: {
+  onCancel: () => void;
+  onCreated: (job: Job) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const submitting = useRef(false);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submitting.current) return;
+    const data = new FormData(event.currentTarget);
+    const value = (name: string) => String(data.get(name) || '').trim();
+    if (
+      !value('address') ||
+      !value('city') ||
+      !value('date') ||
+      !Number.isFinite(new Date(value('date')).getTime())
+    ) {
+      setError('Enter a property address, city / postcode and valid appointment date and time.');
+      return;
+    }
+    const created: Job = {
+      id: crypto.randomUUID(),
+      address: value('address'),
+      city: value('city'),
+      date: value('date'),
+      type: value('type') || 'Not provided',
+      contact: value('contact') || 'Not provided',
+      access: value('access') || 'Not provided',
+    };
+    submitting.current = true;
+    setBusy(true);
+    setError('');
+    try {
+      await store.createJob(created);
+      onCreated(created);
+    } catch {
+      setError(
+        'Could not create the inspection. Your entries are still here. Check browser storage and try again.',
+      );
+    } finally {
+      submitting.current = false;
+      setBusy(false);
+    }
+  }
+
+  return (
+    <>
+      <button className="back" disabled={busy} onClick={onCancel}>
+        <ArrowLeft size={16} /> All inspections
+      </button>
+      <div className="eyebrow">SCHEDULE A VISIT</div>
+      <h1>New inspection</h1>
+      <p>Enter the property and appointment. Use fictional details for this demo.</p>
+      <form className="card new-inspection-form" onSubmit={submit}>
+        <h2>Property and appointment</h2>
+        <p>Address, city / postcode and appointment are required.</p>
+        {[
+          ['address', 'Property address', true],
+          ['city', 'City / postcode', true],
+          ['date', 'Appointment date and time', true],
+          ['type', 'Property type (optional)', false],
+          ['contact', 'Contact (optional)', false],
+          ['access', 'Access notes (optional)', false],
+        ].map(([name, label, required]) => (
+          <label className="field-label" key={String(name)}>
+            {label}
+            <input
+              name={String(name)}
+              type={name === 'date' ? 'datetime-local' : 'text'}
+              required={Boolean(required)}
+              autoFocus={name === 'address'}
+              disabled={busy}
+            />
+          </label>
+        ))}
+        {error && (
+          <p className="creation-error" role="alert">
+            {error}
+          </p>
+        )}
+        <div className="creation-actions">
+          <button className="primary" type="submit" disabled={busy}>
+            {busy ? 'Creating…' : 'Create inspection'}
+          </button>
+          <button className="back" type="button" disabled={busy} onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
     </>
   );
 }

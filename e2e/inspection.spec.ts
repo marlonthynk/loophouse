@@ -144,3 +144,107 @@ test('date controls and inspection inputs remain usable on a narrow screen', asy
     contentType: 'image/png',
   });
 });
+
+for (const width of [1440, 390]) {
+  test(`new inspection can be scheduled, persisted and completed at ${width}px`, async ({
+    page,
+  }, testInfo) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.getByRole('button', { name: 'New inspection', exact: true }).click();
+    await page.getByLabel('Property address').fill('Discarded fictional property');
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
+    await expect(page.locator('.jobs > button')).toHaveCount(6);
+    await page.getByRole('button', { name: 'Today', exact: true }).click();
+    await page.getByLabel('Search by address').fill('Willow');
+    await page.getByLabel('Filter by status').selectOption('Completed');
+    await page.getByRole('button', { name: 'New inspection', exact: true }).click();
+    await page.getByRole('button', { name: 'Create inspection', exact: true }).click();
+    await expect(page.getByLabel('Property address')).toBeFocused();
+    await page.getByLabel('Property address').fill('   ');
+    await page.getByLabel('City / postcode').fill('Fictional York, YO1 1ZZ');
+    await page.getByLabel('Appointment date and time').fill('2026-11-20T14:45');
+    await page.getByRole('button', { name: 'Create inspection', exact: true }).click();
+    await expect(page.getByRole('alert')).toContainText('Enter a property address');
+    await page.getByLabel('Property address').fill('  12 Fictional Orchard Lane  ');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+      true,
+    );
+    await testInfo.attach(`new-inspection-${width}`, {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
+    // Two immediate submissions must still create one record.
+    await page.locator('form').evaluate((form: HTMLFormElement) => {
+      form.requestSubmit();
+      form.requestSubmit();
+    });
+    await expect(page.locator('.jobs > button')).toHaveCount(7);
+    const created = page.getByRole('button', { name: /12 Fictional Orchard Lane/ });
+    await expect(created).toContainText('Scheduled');
+    await expect(created).toContainText('20 Nov 2026, 14:45');
+    await expect(page.getByLabel('Search by address')).toHaveValue('');
+    await expect(page.getByLabel('Filter by status')).toHaveValue('All');
+    await expect(page.getByRole('button', { name: 'Today', exact: true })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    await page.reload();
+    await created.click();
+    await expect(page.getByText('Fictional York, YO1 1ZZ', { exact: false })).toBeVisible();
+    await page.getByRole('button', { name: 'Start inspection', exact: true }).click();
+    await page
+      .getByLabel('Notes', { exact: true })
+      .first()
+      .fill('Fictional new property observation.');
+    await expect(page.locator('.save-state')).toHaveText('● Saved');
+    await page.reload();
+    await created.click();
+    await page.getByRole('button', { name: 'Resume inspection', exact: true }).click();
+    await expect(page.getByLabel('Notes', { exact: true }).first()).toHaveValue(
+      'Fictional new property observation.',
+    );
+    for (const select of await page.getByLabel('Condition', { exact: false }).all())
+      await select.selectOption('Good');
+    await page.getByRole('button', { name: 'Review report', exact: true }).click();
+    await page.getByRole('button', { name: 'Complete inspection', exact: true }).click();
+    await expect(
+      page.getByRole('heading', { name: 'Inspection report', exact: true }),
+    ).toBeVisible();
+    const downloadPromise = page.waitForEvent('download');
+    await page.getByRole('button', { name: 'Download PDF', exact: true }).click();
+    const pdf = await readFile((await (await downloadPromise).path())!);
+    for (const value of [
+      '12 Fictional Orchard Lane',
+      'Fictional York',
+      'Fictional new property observation.',
+    ])
+      expect(pdf.toString('latin1')).toContain(value);
+  });
+}
+
+test('new inspection keeps entries after a storage failure and retries without duplicates', async ({
+  page,
+}) => {
+  await page.getByRole('button', { name: 'New inspection', exact: true }).click();
+  await page.getByLabel('Property address').fill('55 Fictional Birch Road');
+  await page.getByLabel('City / postcode').fill('Fictional Bristol');
+  await page.getByLabel('Appointment date and time').fill('2026-11-21T10:15');
+  await page.evaluate(() => {
+    const original = IDBObjectStore.prototype.add;
+    IDBObjectStore.prototype.add = function (...args) {
+      if (this.name === 'jobs') {
+        IDBObjectStore.prototype.add = original;
+        throw new DOMException('Fictional storage failure', 'QuotaExceededError');
+      }
+      return original.apply(this, args);
+    };
+  });
+  await page.getByRole('button', { name: 'Create inspection', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('Could not create the inspection');
+  await expect(page.getByLabel('Property address')).toHaveValue('55 Fictional Birch Road');
+  await expect(page.getByLabel('Appointment date and time')).toHaveValue('2026-11-21T10:15');
+  await page.getByRole('button', { name: 'Create inspection', exact: true }).click();
+  await expect(page.locator('.jobs > button')).toHaveCount(7);
+  await page.reload();
+  await expect(page.getByRole('button', { name: /55 Fictional Birch Road/ })).toHaveCount(1);
+});
