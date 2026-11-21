@@ -6,7 +6,8 @@ Use Node.js 22 or later:
 
 ```sh
 npm ci
-npm run browser:install
+npx playwright install --with-deps chromium
+npm run browser:check
 npm run verify
 ```
 
@@ -18,7 +19,7 @@ npm run verify
 
 The receipt records HEAD and dirty files because a passing working tree is not necessarily the same as a later commit. Rerun relevant verification when code/tests change. Do not use an old receipt as evidence for newer work.
 
-Individual commands are `npm test`, `npm run build`, `npm run browser:check` and `npm run test:e2e`. Open the HTML report with `npm run test:report`. Screenshots, the downloaded PDF, traces and retained failure videos are linked inside that report. GitHub Actions uploads the entire `artifacts/` folder after a run, including failures.
+Individual commands are `npm test`, `npm run build`, `npm run browser:check` and `npm run test:e2e`. Open the HTML report with `npm run test:report`. Screenshots and the downloaded PDF are attached inside that report. Traces and videos are retained on failure by default; use `npm run test:e2e -- --trace on` to preserve successful rollout traces too. Save that separate run alongside the verification receipt and identify which run each artifact belongs to. GitHub Actions uploads the entire `artifacts/` folder after a run, including failures.
 
 ## What the baseline browser suite checks
 
@@ -36,23 +37,26 @@ Create `docs/work/<ISSUE-ID>.md` with the outcome, implementation steps, accepta
 
 Update the evidence section with commands/results, screenshot/report paths, limitations and outstanding questions. Do not claim a screenshot, browser run or CI check exists unless it ran. An artifact path in a cloud task is not automatically a public download URL; use the supported attachment surface when available and the actual CI report link once published.
 
-## Codex Legacy environment
+## Fresh Linear cloud sessions
 
-The setup script is `scripts/cloud-setup.sh`:
+Use Linear's own coding environment for this repository, with the already configured Codex agent and Model Auto. No external Codex/Legacy environment is needed. From the checkout run:
 
 ```sh
-cd /workspace/loophouse
-npm ci
-npx playwright install --with-deps chromium
+bash scripts/cloud-setup.sh
 npm run browser:check
+npm run verify
 ```
 
-Install browsers and Linux dependencies during setup, which has package-download access. Runtime tasks can test the local application with agent internet off. Run `npm run browser:check` again in the actual task: a setup success alone does not prove the agent phase can launch it. The pinned npm package and browser installation must match. A changed lockfile may require installing the new browser version during environment preparation.
+The repository-scoped prepare script resolves its checkout from its own location, so it also works when invoked by absolute path from another directory. It runs `npm ci`, `npx playwright install --with-deps chromium` and `npm run browser:check`. Use Node.js 22 or later. The locked `@playwright/test` package (currently 1.65.0) selects the matching Chromium revision; do not substitute a system browser or independently upgrade dependencies. Re-run preparation after relevant lockfile changes.
 
-The setup must use a repository revision containing these files. Keep environment setup, AGENTS.md and the dispatch Loop aligned; a prompt cannot install a missing browser while runtime downloads are blocked.
+The supported Playwright installer needs package-download access and Linux package-install privileges (root or working sudo) for missing system libraries. When system libraries are already provisioned and the session has no package-install privileges, use `bash scripts/cloud-setup.sh --browser-only`. This still installs locked npm dependencies and matching Chromium and requires a successful rendering preflight; it does not waive missing libraries. For browser downloads alone, use `npm run browser:install`. If downloads or privilege are unavailable, retain the exact installer/preflight error and arrange the missing capability in this repository's Linear environment, then retry preparation and verification in the same session. Do not change another repository's environment or workspace model/billing settings. Never call unavailable infrastructure a test pass. A setup success alone is insufficient: run preflight and verification in the actual coding session.
 
-## Handoff rules
+For MAR-25 and future testing-workflow rollouts, run the full existing browser suite even for documentation-only changes. For ordinary documentation-only work, a proportionate check may explain why browser verification is not applicable. Code changes require full `npm run verify` and useful issue-specific behavior coverage. Inspect desktop/mobile screenshots and current report/receipt, record actual commands/results and tested HEAD/dirty tree in the work note and append the journal. Never replace historical observations with current claims.
 
-See AGENTS.md for exact outcome markers. Code with required passing checks enters Pending PR creation. Finished code awaiting unavailable tests enters Code completed — Pending test. Questions enter Needs input and are sent to the human in Slack with a link to the Linear Codex thread. Fix real failing assertions while In Progress. Reply in the original thread and mention @Codex to continue the same task.
+## Publication and handoff
 
-The completion Loop checks the reported outcome/evidence; it is an agent interpreting a report, not an independent deterministic proof. CI reruns the tests after a human creates the PR, and human review remains necessary before merging.
+After required checks pass, use native `git_push` and `create_pull_request` to publish a real draft PR against main automatically. Include the issue association, actual test evidence and limitations; verify the PR's head and draft flag. Human review and merge are still required. Preserve the assignee and use only the triggering issue/session; send no Slack.
+
+Keep GitHub Actions enabled without skip directives. It already installs matching Chromium/Linux dependencies, runs `npm run verify` and uploads `artifacts/` for 14 days, including failures. Inspect the published head's actual CI status separately; queued/pending is not success, and session success does not prove CI success. Do not wait for CI unless asked to monitor it. Link the real run/report when available.
+
+See AGENTS.md for exact final outcome markers. Verified implementation plus a real draft PR enters In Review. Verified work awaiting unavailable publication enters Pending PR creation with an exact blocker/recovery. Unavailable required test infrastructure enters Code completed — Pending test. Actual assertion/implementation failures remain In Progress; material unanswered questions enter Needs input. The agent posts the handoff and updates the issue itself while the older Loops are paused. Continue from human replies in the same task. Never mark Done, merge or deploy.

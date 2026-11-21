@@ -15,23 +15,22 @@ Open the address printed by Vite. Use the fictional jobs to start an inspection,
 
 ## Checks
 
-```sh
-npm run format:check
-npm test
-npm run build
-```
-
-Run `npm run format` to format the source and configuration files with Prettier.
-
-For complete browser verification, install Chromium once and run:
+Use the full verification workflow for code changes:
 
 ```sh
-npm run browser:install
+bash scripts/cloud-setup.sh
+npm run browser:check
 npm run verify
 npm run test:report
 ```
 
-See [TESTING.md](TESTING.md) for the isolated fictional fixtures, reports, cloud setup and plan-before-code workflow. Browser tests use port 4175 and do not reset your development browser's data. An unavailable browser is reported as pending verification, never as a pass.
+Preparation installs locked dependencies, matching Playwright Chromium and required Linux libraries. It requires package-download access and Linux package-install privileges; use `bash scripts/cloud-setup.sh --browser-only` when system libraries are already provisioned (the rendering preflight still must pass). Verification runs formatting, test TypeScript, unit tests, production build, Chromium preflight and real Playwright journeys. Run `npm run format` to format source and configuration files.
+
+See [TESTING.md](TESTING.md) for isolated fictional fixtures, reports, fresh Linear session setup and failure recovery. Browser tests use port 4175 and do not reset your development browser's data. Missing infrastructure is pending verification, never a pass.
+
+For Linear issues, record `docs/work/<ISSUE-ID>.md` before implementation, map acceptance criteria to observable checks, then proceed automatically. Add useful issue-specific behavior tests, exercise changed flows and inspect desktop/mobile screenshot evidence. Testing-workflow rollouts run browser journeys even for documentation changes. Record actual receipt/report paths, results and limitations.
+
+Work runs in Linear's own cloud coding environment with the configured Codex agent and Model Auto. After verification the agent pushes the task branch and automatically publishes a real draft PR, then posts the handoff and sets the triggering issue In Review. CI runs independently; pending CI is not a pass. Humans review and merge. Preserve the human assignee and original session; no Slack notifications, automatic merge or deployment. See [LINEAR-HANDOFF.md](LINEAR-HANDOFF.md) for current statuses and publication-blocker handling.
 
 Data is local to the browser, can be cleared or evicted, and does not sync across devices. Use fictional data. The safety section is a demo, not a regulatory assessment.
 

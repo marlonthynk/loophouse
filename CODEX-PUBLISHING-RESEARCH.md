@@ -2,6 +2,8 @@
 
 Researched 10 November 2026 for the LoopHouse experiment. These are external reports and documentation findings, not successful verification of LoopHouse publication.
 
+Historical research only: MAR-25 supersedes these routing/publication recommendations. Current work uses Linear's own coding environment and native draft PR publishing tools; see LINEAR-HANDOFF.md. The dated observations below have not been re-tested or rewritten.
+
 ## Finding
 
 A failure to run `git push` or authenticated `gh` inside a cloud task does not establish that Codex's separate GitHub publishing UI is unavailable. The official Linear integration documentation describes returning a completed task link so the user can create a PR. We have tested shell publication for MAR-17 and seen a proxy 403, missing GitHub CLI authentication, and no task publishing tool. We have not tested the completed task's Create PR action.
