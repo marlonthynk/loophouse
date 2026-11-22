@@ -25,6 +25,10 @@ export async function allJobs(): Promise<Job[]> {
   return (await db).getAll('jobs');
 }
 
+export async function createJob(job: Job) {
+  await (await db).add('jobs', job);
+}
+
 export async function allInspections(): Promise<Inspection[]> {
   return (await db).getAll('inspections');
 }
